@@ -1,0 +1,110 @@
+schema: '2.0'
+stages:
+  extract:
+    cmd: tar -xf data/Posts.xml.zip -C data
+    deps:
+    - path: data/Posts.xml.zip
+      hash: md5
+      md5: ce68b98d82545628782c66192c96f2d2
+      size: 10567868
+    outs:
+    - path: data/Posts.xml
+      hash: md5
+      md5: a86ca87250ed8e54a9e2e8d6d34c252e
+      size: 37916850
+  transform:
+    cmd: python code/xml_to_tsv.py data/Posts.xml data/Posts.tsv
+    deps:
+    - path: code/xml_to_tsv.py
+      hash: md5
+      md5: f491b8b1d164962988473dfac85dead0
+      size: 1494
+    - path: data/Posts.xml
+      hash: md5
+      md5: a86ca87250ed8e54a9e2e8d6d34c252e
+      size: 37916850
+    outs:
+    - path: data/Posts.tsv
+      hash: md5
+      md5: 2910bc798f44dc244424712c8f88e879
+      size: 25679203
+  split:
+    cmd: python code/split_train_test.py 0.2 1234
+    deps:
+    - path: code/split_train_test.py
+      hash: md5
+      md5: 456fb27e82a75ef2d22612d6cd9a9f38
+      size: 1925
+    - path: data/Posts.tsv
+      hash: md5
+      md5: 2910bc798f44dc244424712c8f88e879
+      size: 25679203
+    outs:
+    - path: data/Posts-test.tsv
+      hash: md5
+      md5: b273ad4146169f95aa5d7a60221c7921
+      size: 5012174
+    - path: data/Posts-train.tsv
+      hash: md5
+      md5: dfcd992c9c398201515eb879b7283101
+      size: 20898709
+  featurize:
+    cmd: python code/featurization.py
+    deps:
+    - path: code/featurization.py
+      hash: md5
+      md5: 6879bb6f15aa1230248b5ebf642168aa
+      size: 2199
+    - path: data/Posts-test.tsv
+      hash: md5
+      md5: b273ad4146169f95aa5d7a60221c7921
+      size: 5012174
+    - path: data/Posts-train.tsv
+      hash: md5
+      md5: dfcd992c9c398201515eb879b7283101
+      size: 20898709
+    outs:
+    - path: data/matrix-test.pkl
+      hash: md5
+      md5: dafc0eb8b3806252d6bfe4678e2b5204
+      size: 2272922
+    - path: data/matrix-train.pkl
+      hash: md5
+      md5: af3da1ce67cde348e3171c0921f5086f
+      size: 9248499
+  train:
+    cmd: python code/train_model.py 1234
+    deps:
+    - path: code/train_model.py
+      hash: md5
+      md5: 45edc9709901672818fc8d4a7caeb5eb
+      size: 945
+    - path: data/matrix-train.pkl
+      hash: md5
+      md5: af3da1ce67cde348e3171c0921f5086f
+      size: 9248499
+    outs:
+    - path: data/model.pkl
+      hash: md5
+      md5: 84a5b1ed2993156f2277b35d07f927d3
+      size: 6778928
+  evaluate:
+    cmd: python code/evaluate.py
+    deps:
+    - path: code/evaluate.py
+      hash: md5
+      md5: 64b33d7a9f1aef5a36ad12ab6bfd9523
+      size: 845
+    - path: data/matrix-test.pkl
+      hash: md5
+      md5: dafc0eb8b3806252d6bfe4678e2b5204
+      size: 2272922
+    - path: data/model.pkl
+      hash: md5
+      md5: 84a5b1ed2993156f2277b35d07f927d3
+      size: 6778928
+    outs:
+    - path: metrics/auc.metric
+      hash: md5
+      md5: 9ed8553e1d3e783fd77c01c3dadb9695
+      size: 15
