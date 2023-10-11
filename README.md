@@ -31,3 +31,8 @@
         - dvc stage add -n train -d code/train_model.py -d data/matrix-train.pkl -o data/model.pkl python code/train_model.py 1234 
     - Evaluation:
         - dvc stage add -n evaluate -d code/evaluate.py -d data/model.pkl -d data/matrix-test.pkl -M metrics/auc.metric python code/evaluate.py
+
+5. Mlflow integration
+    - import dagshub
+    - import mlflow
+    - put mlflow.start_run(), log_metric("auc", value), mlflow.end_run()
