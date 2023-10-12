@@ -10,8 +10,8 @@
     - dvc add data/Posts.xml.zip
     - dvc remote add origin s3://dvc
     - dvc remote modify origin endpointurl https://dagshub.com/andreabasile97/dagshub-demo.s3
-    - dvc remote modify origin --local access_key_id {6e3ac8f03201e07f4c0faee9317fc2fd57b6943c}
-    - dvc remote modify origin --local secret_access_key 6e3ac8f03201e07f4c0faee9317fc2fd57b6943c
+    - dvc remote modify origin --local access_key_id {6e3ac8f03201e07f4c0faee9317fc2fd57b6****}
+    - dvc remote modify origin --local secret_access_key {6e3ac8f03201e07f4c0faee9317fc2fd57b6****}
     - git add .
     - git commit -m "Initialize dvc"
     - git push
